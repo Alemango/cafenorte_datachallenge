@@ -1,0 +1,60 @@
+flowchart LR
+  subgraph F["1 · Fuentes"]
+    direction TB
+    POS["POS · 40 tiendas<br/>export CSV diario"]
+    ERP["ERP legacy<br/>snapshots JSON"]
+    SHOP["Shopify<br/>Admin API"]
+    FX["Banxico SIE<br/>tipo de cambio FIX"]
+  end
+
+  subgraph I["2 · Ingesta"]
+    direction TB
+    AGENTE["Agente s3 cp<br/>rol IAM temporal"]
+    LAMBDA["Lambda extractores<br/>Shopify + FX"]
+  end
+
+  subgraph P["3 · Lake + procesamiento · S3 cifrado con KMS"]
+    direction LR
+    BRONZE[("bronze/<br/>crudo + linaje")]
+    G1["Glue job · PySpark<br/>normaliza y concilia<br/>+ 7 chequeos que abortan"]
+    SILVER[("silver/<br/>dims y hechos conformes")]
+    G2["Glue job · PySpark<br/>marts de negocio"]
+    GOLD[("gold/<br/>4 preguntas + calidad")]
+    BRONZE --> G1 --> SILVER --> G2 --> GOLD
+  end
+
+  subgraph C["4 · Consumo"]
+    direction TB
+    ATHENA["Athena<br/>SQL para TI"]
+    QS["QuickSight<br/>tablero del dueño"]
+    SNS["SNS<br/>alertas y fallas"]
+  end
+
+  subgraph O["5 · Operación"]
+    direction TB
+    SFN["Step Functions<br/>orquesta · reintenta"]
+    EVB["EventBridge Scheduler<br/>diario 05:00 CDMX"]
+    CAT["Glue Data Catalog"]
+  end
+
+  POS --> AGENTE
+  ERP --> AGENTE
+  SHOP --> LAMBDA
+  FX --> LAMBDA
+  AGENTE --> BRONZE
+  LAMBDA --> BRONZE
+
+  GOLD --> ATHENA --> QS
+  GOLD --> SNS
+
+  EVB -.-> SFN
+  SFN -.-> G1
+  SFN -.-> G2
+  SFN -.falla.-> SNS
+  G2 -.-> CAT
+  CAT -.-> ATHENA
+
+  classDef store fill:#eef4fb,stroke:#4a7ab5;
+  classDef job fill:#fdf3e3,stroke:#c98b2a;
+  class BRONZE,SILVER,GOLD store;
+  class G1,G2 job;
