@@ -27,9 +27,9 @@ alguna vez deja de coincidir, el pipeline falla en `validar_mapeo_explicito`
 en vez de producir números silenciosamente incorrectos.
 
 Alternativa descartada: `join` directo contra `sku_mappings`. Habría descartado
-~6% de las líneas de venta —incluyendo CN-00001, uno de los tres productos con
-margen negativo—, y el pipeline habría "corrido sin error" con la respuesta 4
-equivocada.
+8,066 de 96,437 líneas de venta (8.4%) —incluyendo CN-00001, uno de los tres
+productos con margen negativo—, y el pipeline habría "corrido sin error" con la
+respuesta 4 equivocada.
 """
 
 from __future__ import annotations

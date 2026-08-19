@@ -170,9 +170,9 @@ escenario "N/A como cero" reporta 4 rachas contra las 3 reales.
 <!-- Candidatos reales que puedes desarrollar:
 
   * El `JOIN` directo contra `sku_mappings`. Es la solución obvia y la que
-    cualquier asistente propone primero. Descarta ~6% de las líneas de venta,
-    incluido CN-00001, que es uno de los tres productos con margen negativo. La
-    respuesta 4 habría salido incompleta sin ningún error visible.
+    cualquier asistente propone primero. Descarta 8,066 de 96,437 líneas de
+    venta (8.4%), incluido CN-00001, que es uno de los tres productos con margen
+    negativo. La respuesta 4 habría salido incompleta sin ningún error visible.
 
   * Usar el último costo conocido para todo el histórico en vez de un join
     as-of contra las vigencias de `cost_history`. Reescribe el margen de todos

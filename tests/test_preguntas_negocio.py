@@ -16,6 +16,7 @@ from cafenorte.marts.business_questions import (
     crecimiento_mom_por_canal,
     margen_negativo,
     quiebres_de_stock,
+    quiebres_sensibilidad,
     rotacion_inventario,
 )
 
@@ -187,6 +188,23 @@ def test_rachas_de_tiendas_distintas_no_se_mezclan(spark, dim_prod, dim_tie, set
     )
     detalle, _ = quiebres_de_stock(inv, dim_prod, dim_tie, CORTE, settings)
     assert detalle.count() == 0
+
+
+def test_sensibilidad_separa_los_tres_criterios(spark, settings):
+    """0,0,N/A,0,0 vale 0, 1 o 1 racha según cómo se trate la lectura ausente.
+
+    Sin este test, los tres escenarios podrían estar calculando lo mismo y el
+    análisis de sensibilidad daría una falsa sensación de robustez.
+    """
+    inv = _snapshots(spark, [0, 0, None, 0, 0])
+    resultado = {
+        f["escenario"]: f["num_quiebres"]
+        for f in quiebres_sensibilidad(inv, CORTE, settings).collect()
+    }
+
+    assert resultado["na_corta_racha"] == 0  # dos rachas de 2
+    assert resultado["na_puentea"] == 1  # una racha de 4 ignorando el hueco
+    assert resultado["na_como_cero"] == 1  # una racha de 5
 
 
 # --- P3 MoM ----------------------------------------------------------------

@@ -237,9 +237,9 @@ del ERP no cubre todo:
 * 5 renglones traen `sku_erp` nulo,
 * 6 handles de Shopify con órdenes no aparecen.
 
-Un `JOIN` directo contra `sku_mappings` descarta **~6% de las líneas de venta**
-—incluido **CN-00001, uno de los tres productos con margen negativo**— y el
-pipeline entrega la respuesta 4 incompleta sin quejarse.
+Un `JOIN` directo contra `sku_mappings` descarta **8,066 de 96,437 líneas de
+venta (8.4%)** —incluido **CN-00001, uno de los tres productos con margen
+negativo**— y el pipeline entrega la respuesta 4 incompleta sin quejarse.
 
 **Solución:** los tres formatos comparten un consecutivo numérico, y en los 65
 renglones del mapeo explícito coincide en los tres sistemas **sin una sola
