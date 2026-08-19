@@ -205,7 +205,7 @@ escenario "N/A como cero" reporta 4 rachas contra las 3 reales.
      error"? — Ésta es la pregunta que más pesa. Lo que hay en el repo:
 
      * 7 chequeos de calidad que **abortan** la corrida, no que advierten;
-     * 48 tests de lógica sobre datos sintéticos con resultados calculables a
+     * 49 tests de lógica sobre datos sintéticos con resultados calculables a
        mano (que `E` reste, que `"N/A"` no sea cero, que una venta de mayo se
        costee con el costo de mayo, que una racha de 3 días no se reporte);
      * 12 tests de verificación cruzada que **recalculan las cifras clave

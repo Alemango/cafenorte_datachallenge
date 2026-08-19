@@ -155,6 +155,6 @@ construyamos va a estar mal para alguno de los dos.
 
 ---
 
-*Anexo: la prueba de concepto —pipeline completo, 60 pruebas automatizadas y las
+*Anexo: la prueba de concepto —pipeline completo, 61 pruebas automatizadas y las
 cuatro respuestas verificadas contra un cálculo independiente— está en el
 repositorio que acompaña esta propuesta.*

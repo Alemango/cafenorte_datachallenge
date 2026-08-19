@@ -17,7 +17,7 @@ que la corrida sea reproducible.
 #    sales.csv  inventory.json  ecommerce_orders.parquet  exchange_rates.csv
 make setup          # venv + dependencias (necesita Python 3.10+ y Java 17/21)
 make run            # bronze -> silver -> gold, ~2.5 min en una laptop
-make test           # 60 tests
+make test           # 61 tests
 ```
 
 Salidas:
@@ -171,7 +171,7 @@ src/cafenorte/
   marts/business_questions.py las 4 preguntas
   quality/expectations.py     7 chequeos que detienen el pipeline
   pipeline.py                 orquestador / CLI
-tests/                        60 tests (unitarios + verificación cruzada)
+tests/                        61 tests (unitarios + verificación cruzada)
 docs/                         propuesta técnica, diagrama, decisiones
 ```
 
@@ -332,7 +332,7 @@ Los de severidad `error` abortan la corrida:
 | `grano_inventario_unico` | 0 duplicados fecha/tienda/producto |
 | `inventario_no_negativo` | 0 lecturas negativas |
 
-**60 tests** en tres niveles:
+**61 tests** en tres niveles:
 
 * **Lógica** (`test_product_keys.py`, `test_transformaciones.py`): reglas
   aisladas sobre datos sintéticos con resultados calculables a mano — que `E`
@@ -358,7 +358,7 @@ Priorizado hacia la corrección de los números y la trazabilidad de las
 decisiones, que es donde el reto pone el peso (25% + 20%).
 
 **Dentro:** pipeline completo con capas, las 4 respuestas verificadas, 7
-chequeos de calidad, 60 tests, propuesta AWS costeada, documentación de
+chequeos de calidad, 61 tests, propuesta AWS costeada, documentación de
 supuestos.
 
 **Fuera, a propósito:**
