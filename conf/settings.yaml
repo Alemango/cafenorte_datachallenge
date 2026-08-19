@@ -1,0 +1,59 @@
+# Configuración del pipeline analítico de CaféNorte.
+# Todos los parámetros de negocio viven aquí para que las respuestas sean
+# reproducibles y auditables sin tocar código.
+
+rutas:
+  raw: data/raw
+  lake: outputs/lake          # bronze / silver / gold en Parquet particionado
+  reportes: outputs/reportes  # CSV legibles con las 4 respuestas de negocio
+
+archivos:
+  ventas_pos: sales.csv
+  inventario_erp: inventory.json
+  ordenes_ecommerce: ecommerce_orders.parquet
+  tipos_de_cambio: exchange_rates.csv
+
+spark:
+  app_name: cafenorte-analytics
+  master: "local[*]"
+  shuffle_partitions: 8
+  driver_memory: 4g
+
+negocio:
+  # Fecha de corte del análisis. `auto` = máxima fecha observada en las fuentes
+  # transaccionales. Se puede fijar (YYYY-MM-DD) para congelar los resultados.
+  fecha_corte: auto
+
+  # Catálogo CFDI 4.0 (SAT). Sólo I y E afectan ingresos.
+  #   I = Ingreso            -> venta            (+1)
+  #   E = Egreso             -> nota de crédito  (-1)
+  #   P = Complemento de Pago-> no es venta nueva (excluir: duplicaría ingreso)
+  #   T = Traslado           -> movimiento de mercancía, no es venta
+  #   N = Nómina             -> ruido del POS, no es venta
+  comprobantes_ingreso: ["I"]
+  comprobantes_devolucion: ["E"]
+  comprobantes_excluidos: ["P", "T", "N"]
+
+  # Marcador del ERP legacy para lectura de inventario no disponible.
+  # NO es cero: tratarlo como cero inventa quiebres de stock.
+  centinela_inventario_nulo: ["N/A", "NA", "null", ""]
+
+  ventanas:
+    rotacion_meses: 6      # P1: rotación de inventario
+    quiebres_meses: 3      # P2: último trimestre
+    mom_meses: 12          # P3: crecimiento mes a mes
+    margen_meses: 12       # P4: margen negativo
+
+  # P2: se reporta una racha cuando supera estrictamente este número de días.
+  quiebre_dias_minimos: 3
+
+  # Pseudo-tienda para el canal e-commerce (Shopify no tiene tienda física).
+  tienda_ecommerce: "ONLINE"
+
+  moneda_reporte: "MXN"
+
+calidad:
+  # Umbrales que hacen fallar el pipeline (no sólo advertir).
+  max_pct_ventas_sin_producto: 0.5      # % de líneas de venta sin match en catálogo
+  max_pct_lecturas_invalidas: 5.0       # % de snapshots con centinela nulo
+  max_pct_ecommerce_sin_fx: 0.0         # % de órdenes extranjeras sin tipo de cambio
