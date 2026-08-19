@@ -2,7 +2,8 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-outputs/
+outputs/*
+!outputs/.gitkeep
 spark-warehouse/
 metastore_db/
 derby.log
