@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+outputs/
+spark-warehouse/
+metastore_db/
+derby.log
+.DS_Store
+# Los archivos fuente se entregan por separado; ver README.
+data/raw/*.csv
+data/raw/*.json
+data/raw/*.parquet
